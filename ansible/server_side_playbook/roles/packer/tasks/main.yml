@@ -1,0 +1,8 @@
+---
+# Description : Install and configure packer in order to build raspberry image
+# file : main.yml
+
+- import_tasks: _install_plugin.yml
+  become: yes
+  tags: [install_plugin]
+

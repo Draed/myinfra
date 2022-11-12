@@ -1,0 +1,6 @@
+inventory.yml
+
+my-packer-rasp1-os.json
+my-packer-rasp2-os.json
+rasp1_setup.sh
+rasp2_setup.sh

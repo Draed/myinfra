@@ -1,0 +1,14 @@
+- hosts: main_server 
+  gather_facts: true
+  roles:
+    - role: install_packages
+      tags: [install_packages]
+
+    - role: virtualbox
+      tags: [virtualbox]
+
+    - role: packer
+      tags: [packer]
+
+    # - role: vagrant
+    #   tags: [vagrant]

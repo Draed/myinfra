@@ -1,0 +1,11 @@
+---
+
+PACKER_ARM_BUILDER_VERSION: "v0.2.7"
+packer_plugin_url_list: 
+  - { "url" : "https://github.com/solo-io/packer-plugin-arm-image/releases/download/{{PACKER_ARM_BUILDER_VERSION}}/packer-plugin-arm-image_{{PACKER_ARM_BUILDER_VERSION}}_x5.0_linux_arm64.zip",
+      "checksum": "f8c20695e99a59110e58f8635f543f46adda32ef7cec13eddd0685284a32bf89"
+    }
+
+packer_plugin_path: "/home/ottomatic/.config/packer/plugin"
+packer_plugin_repo_list:
+  - https://github.com/solo-io/packer-plugin-arm-image.git

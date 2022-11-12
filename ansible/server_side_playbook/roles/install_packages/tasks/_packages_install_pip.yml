@@ -1,0 +1,8 @@
+---
+# file : _packages_install_pip.yml
+# description : install python (pip) package 
+
+- name: Install python package with pip
+  ansible.builtin.pip:
+    name: "{{ pip_packages }}"
+  when : pip_packages is iterable

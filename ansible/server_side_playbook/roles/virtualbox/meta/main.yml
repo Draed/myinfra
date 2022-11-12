@@ -1,0 +1,12 @@
+---
+dependencies:
+  - role: install_packages
+    become: yes
+    vars:
+      apt_repo_key :
+        - {"url" :  "https://www.virtualbox.org/download/oracle_vbox_2016.asc", "dest" :  "/usr/share/keyrings/oracle_vbox_2016.asc"}
+      apt_repo:
+        - "deb [arch=amd64 signed-by=/usr/share/keyrings/oracle_vbox_2016.asc] https://download.virtualbox.org/virtualbox/debian {{ ansible_distribution_release }} contrib"
+      apt_packages_list:
+        # - virtualbox-6.1
+        - virtualbox

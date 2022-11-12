@@ -1,0 +1,74 @@
+---
+# Description : configure docker service
+# file : main.yml
+# from : https://docs.docker.com/engine/security/rootless/
+
+# For Debian 10 (rootless prerequistes) 
+- name: configure kernel.unprivileged_userns_clone in /etc/sysctl.conf
+  ansible.builtin.lineinfile:
+    path: /etc/sysctl.conf
+    regexp: '^kernel.unprivileged_userns_clone='
+    line: kernel.unprivileged_userns_clone=1
+  when: ansible_distribution == 'Debian' and ansible_distribution_version <= '10'
+
+# wait for kernel 5.11 to activate this on order to prevent non stable behaviour
+# - name: Using overlay2 storage driver with Debian-specific modprobe
+#   community.general.modprobe:
+#     name: overlay
+#     state: present
+#     params: 'permit_mounts_in_userns=1'
+
+- name: Make sure old docker instance are stopped and disabled
+  ansible.builtin.systemd:
+    name: docker
+    state: stopped
+    enabled: no
+  ignore_errors: True
+
+# if any instance of docker is running kill it 
+# sudo systemctl disable --now docker.service docker.socket
+- name: disable previous docker.service and docker.socket
+  ansible.builtin.command: systemctl disable --now docker.service docker.socket
+  ignore_errors: True
+
+# remove old docker package if exist
+# apt-get remove docker docker-engine docker.io containerd runc
+- name: Make sure old docker package are remove (with apt)
+  become: yes
+  ansible.builtin.apt:
+    name: "{{ docker_remove_package_list }}"
+    state: absent
+    autoremove: yes
+    autoclean: yes
+
+# install docker rootles with script
+# as it is currently the only approach for Raspbian
+# see : https://docs.docker.com/engine/install/debian/#install-using-the-convenience-script
+- name: install docker CE rootless with script
+  block:
+
+  - name: Create the script destination directory if it does not exist
+    ansible.builtin.file:
+      path: "/home/{{ user }}/downloads"
+      state: directory
+      mode: '0755'
+
+  - name: Get the script 
+    ansible.builtin.get_url:
+      url: https://get.docker.com/rootless
+      dest: "/home/{{ user }}/downloads/docker_rootless.sh"
+      checksum: sha512:aff814ce5b83ebe74c020b9ab0c0a376651dadae6763c54f35a1a57ce42d6e9aefe61412b4c7a03a8244f151958a75d6354e259a15f541b3b7bcee83d35a3f58
+      mode: '0700'
+
+  - name: launch the script
+    ansible.builtin.shell: "/home/{{ user }}/downloads/docker_rootless.sh"
+
+- name: make docker daemon start at login
+  ansible.builtin.systemd:
+    name: docker
+    state: started
+    enabled: yes
+    scope: user
+
+- name: configure docker client for (this) the server
+  ansible.builtin.shell: "export DOCKER_HOST=unix://$XDG_RUNTIME_DIR/docker.sock"

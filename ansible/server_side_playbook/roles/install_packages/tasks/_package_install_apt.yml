@@ -1,0 +1,37 @@
+---
+# Description : Install package
+# file : _package_install_apt.yml
+
+# add new apt repo with key
+- name: add repo keys
+  ansible.builtin.get_url:
+    dest: "{{ item.dest }}"
+    url: "{{ item.url }}"
+  with_items: "{{ apt_repo_key }}"
+  when: apt_repo_key is iterable
+
+- name: add repo
+  ansible.builtin.apt_repository:
+    repo: "{{ item }}"
+    state: present
+  with_items: "{{ apt_repo }}"
+  when: apt_repo is iterable
+
+## apt update && apt upgrade like
+# Only run "update_cache=yes" if the last one is more than 3600 seconds ago
+- name: Update all packages to their latest version
+  ansible.builtin.apt:
+    update_cache: yes 
+    cache_valid_time: 3600
+    name: "*"
+    state: latest
+    autoclean: yes
+    autoremove: yes
+
+# install package list with apt
+- name: Install default package list with apt
+  ansible.builtin.apt:
+    update_cache: yes 
+    name: "{{ apt_packages_list }}"
+    state: latest
+  when: apt_packages_list is iterable

@@ -1,0 +1,21 @@
+# Basic Vagrant config (API version 2)
+Vagrant.configure(2) do |config|
+  config.vm.box = "perk/ubuntu-2204-arm64"
+  config.vm.provider "qemu" do |qe, override|
+    override.ssh.username = "vagrant"
+    override.ssh.password = "vagrant"
+    qe.arch = "arm"
+    qe.machine = "raspi2b"
+    # qe.machine = "versatilepb"
+    qe.smp = "4"
+    qe.cpu = "arm1176"
+    # qe.cpu = "cortex-a15"
+    qe.memory = "1G"
+    qe.net_device = "usb-net"
+    qe.qemu_command = "qemu-system-arm"
+    qe.extra_qemu_args = %w(-drive format=qcow2,file=myrasp.qcow,if=none,id=drv0 )
+    # qe.extra_qemu_args = %w(-hda myrasp.img -drive format=qcow2,file=/home/ottomatic/Document/vagrant/.vagrant/machines/default/qemu/luQSCVk_Zcw/linked-box.img)
+    qe.qemu_dir = "/usr/lib/x86_64-linux-gnu/qemu"
+    qe.image_path = "/home/ottomatic/Document/vagrant/myrasp.qcow"
+  end
+end

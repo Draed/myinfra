@@ -1,0 +1,7 @@
+---
+# Description : Install and configure vagrant
+# file : main.yml
+
+- import_tasks: _install_plugin.yml
+  become: yes
+  tags: [install_plugin]

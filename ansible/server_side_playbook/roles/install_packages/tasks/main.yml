@@ -1,0 +1,26 @@
+---
+# file : main.yml
+# description : install package 
+
+- name: Deb package installation
+  block: 
+
+  - import_tasks: _package_pretask_apt.yml
+    become: yes
+    tags: [_package_pretask_apt]
+    when: not pgp_installed
+
+  ## install packages with default pckge manager
+  - import_tasks: _package_install_apt.yml
+    become: yes
+    tags: [package_install_apt]
+  
+  when: ansible_facts['distribution'] == "Debian" or ansible_facts['distribution'] == "Ubuntu"
+
+- import_tasks: _packages_install_pip.yml
+  tags: [packages_install_pip]
+  when: pip_packages is iterable
+
+
+
+    

@@ -1,0 +1,14 @@
+---
+
+- name: Gather the package facts
+  ansible.builtin.package_facts:
+    manager: auto
+
+## Check if PGP is already installed
+- name : Make sur PGP is installed
+  ansible.builtin.apt:
+    update_cache: yes 
+    name: pgp
+    state: latest
+  when: "'pgp' in ansible_facts.packages"
+  register: pgp_installed

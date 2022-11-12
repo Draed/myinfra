@@ -1,0 +1,23 @@
+---
+dependencies:
+  - role: install_packages
+    become: yes
+    vars:
+      apt_repo_key :
+        - {"url" : "https://apt.releases.hashicorp.com/gpg", "dest" : "/usr/share/keyrings/hashicorp.asc"}
+      apt_repo:
+        - "deb [signed-by=/usr/share/keyrings/hashicorp.asc] https://apt.releases.hashicorp.com {{ ansible_distribution_release }}  main"
+      apt_packages_list:
+        - golang-go
+        - packer
+        - git
+        - wget 
+        - zip 
+        - unzip 
+        - build-essential 
+        - kpartx 
+        - qemu 
+        - binfmt-support 
+        - qemu-user-static 
+        - e2fsprogs 
+        - dosfstools

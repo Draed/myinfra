@@ -1,0 +1,6 @@
+---
+vagrant_plugin_path: "/home/ottomatic/.config/vagrant/plugin"
+vagrant_plugin_repo_list:
+  - { "name" :  "vagrant-qemu-0.2.22.gem", "repo" :  "https://github.com/billyan2018/vagrant-qemu.git"}
+vagrant_plugin_auto:
+  - vagrant-qemu

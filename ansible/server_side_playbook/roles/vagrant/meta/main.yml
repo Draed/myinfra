@@ -1,0 +1,15 @@
+---
+dependencies:
+  - role: install_packages
+    become: yes
+    vars:
+      apt_repo_key :
+        - {"url" : "https://apt.releases.hashicorp.com/gpg", "dest" : "/usr/share/keyrings/hashicorp.asc"}
+      apt_repo:
+        - "deb [signed-by=/usr/share/keyrings/hashicorp.asc] https://apt.releases.hashicorp.com {{ ansible_distribution_release }}  main"
+      apt_packages_list:
+        - qemu
+        - qemu-utils
+        - vagrant
+        - qemu-system-x86
+        - qemu-system-arm

@@ -1,0 +1,5 @@
+---
+# apt_repo_key :
+# apt_repo:
+# apt_packages_list:
+pgp_installed: False

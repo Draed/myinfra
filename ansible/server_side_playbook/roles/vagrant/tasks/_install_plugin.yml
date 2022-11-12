@@ -1,0 +1,28 @@
+---
+# Description : Install the plugin for vagrant
+# file : install_plugin.yml
+
+## install manually plugins 
+- name: Clone plugin repo
+  ansible.builtin.git:
+    repo: "{{ item.repo }}"
+    dest: "{{ vagrant_plugin_path }}"
+  with_items: "{{ vagrant_plugin_repo_list }}"
+
+- name: build the vagrant plugin
+  ansible.builtin.command:
+    chdir : "{{ vagrant_plugin_path }}"
+    cmd: rake build
+
+- name: install the vagrant plugin manually
+  ansible.builtin.command:
+    chdir : "{{ vagrant_plugin_path }}"
+    cmd: vagrant plugin install pkg/{{ item.name }}
+  with_items: "{{ vagrant_plugin_repo_list }}"
+
+## install vagrant plugin with vagrant cmd 
+- name: install the vagrant plugin with vagrant
+  ansible.builtin.command:
+    chdir : "{{ vagrant_plugin_path }}"
+    cmd: vagrant plugin install {{ item }}
+  with_items: "{{ vagrant_plugin_auto }}"

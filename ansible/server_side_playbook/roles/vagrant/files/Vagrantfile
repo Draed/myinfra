@@ -1,0 +1,19 @@
+Vagrant.configure("2") do |config|
+    # default config
+    config.vm.box = "bionic64"
+
+    config.vm.provider "virtualbox" do |vb|
+    # config for virtualbox provider
+        # Display the VirtualBox GUI when booting the machine
+        #vb.gui = true
+
+        # 
+        override.vm.box = "bionic64_fusion"
+  
+  
+    config.vm.provider "vmware_fusion" do |v, override|
+    # config for vmware provider
+      override.vm.box = "bionic64_fusion"
+    end
+  end
+

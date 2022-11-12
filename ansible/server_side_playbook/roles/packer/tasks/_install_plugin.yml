@@ -1,0 +1,43 @@
+---
+# Description : Install the plugin for packer
+# file : install_plugin.yml
+ 
+# - name: getting the plugins 
+#   ansible.builtin.get_url:
+#     url: "{{ item.url }}"
+#     dest: "/usr/local/bin/{{ item.url | basename }}"
+#     mode: '0760'
+#     checksum: "sha256:{{ item.checksum }}"
+#   with_items: "{{ packer_plugin_url_list }}"
+
+# - name: Unarchive the plugins binaries
+#   ansible.builtin.unarchive:
+#     src: "/usr/local/bin/{{ item.url | basename }}"
+#     dest: "/usr/local/bin/"
+#     remote_src: yes
+#   with_items: "{{ packer_plugin_url_list }}"
+
+- name: "make sure {{ packer_plugin_path }} exist"
+  ansible.builtin.file:
+    path: "{{ packer_plugin_path }}"
+    state: directory
+    mode: '0755'
+
+- name: Clone plugin repo
+  ansible.builtin.git:
+    repo: "{{ item }}"
+    dest: "{{ packer_plugin_path }}"
+  with_items: "{{ packer_plugin_repo_list }}"
+
+- name: download go dependencies
+  ansible.builtin.command:
+    chdir : "{{ packer_plugin_path }}"
+    cmd: go mod download
+  with_items: "{{ packer_plugin_repo_list }}"
+
+- name: build go dependencies
+  ansible.builtin.command: 
+    chdir : "{{ packer_plugin_path }}"
+    cmd: go build
+    # cmd: "go build /packer_plugin_path/{{ item | urlsplit('path') | basename | splitext | first  }}"
+  with_items: "{{ packer_plugin_repo_list }}"
